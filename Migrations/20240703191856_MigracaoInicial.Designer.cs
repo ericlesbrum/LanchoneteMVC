@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lanchonete.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240702213408_MigracaoInicial")]
+    [Migration("20240703191856_MigracaoInicial")]
     partial class MigracaoInicial
     {
         /// <inheritdoc />
