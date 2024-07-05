@@ -1,0 +1,16 @@
+@using System.Globalization
+@model IEnumerable<LanchoneteMVC.Models.Lanche>
+@{
+    ViewData["Title"] = "Todos os Lanches";
+}
+
+<div>
+    <h2>@ViewData["Title"]</h2>
+</div>
+@foreach(var lanche in Model){
+    <div>
+        <h4>Lanche: @lanche.Nome</h4>
+        <p>@lanche.ImagemUrl</p>
+        <p>Preço: @lanche.Preco.ToString("c",CultureInfo.CreateSpecificCulture("pt-BR"))</p>
+    </div>
+}
