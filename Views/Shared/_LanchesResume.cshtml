@@ -1,0 +1,9 @@
+@using System.Globalization
+@model Lanche
+
+<div class="col-sm-4 col-md-4 col-lg-4">
+    <p>@Model.ImagemUrl</p>
+    <h3>Preço: @Model.Preco.ToString("c", CultureInfo.CreateSpecificCulture("pt-BR"))</h3>
+    <h4>Model: @Model.Nome</h4>
+    <p>@Model.DescricaoCurta</p>
+</div>    
