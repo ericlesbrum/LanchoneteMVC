@@ -14,11 +14,21 @@ internal class Program
         options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection")));
 
         //DI
-        builder.Services.AddTransient<ILancheRepository,LancheRepository>();
-        builder.Services.AddTransient<ICategoriaRepository,CategoriaRepository>();
+        builder.Services.AddTransient<ILancheRepository, LancheRepository>();
+        builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
+        builder.Services.AddTransient<CarrinhoCompraRepository>();
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
+
+        builder.Services.AddDistributedMemoryCache();
+
+        builder.Services.AddSession(options =>
+        {
+            options.IdleTimeout = TimeSpan.FromMinutes(20);
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true;
+        });
 
         var app = builder.Build();
 
@@ -26,7 +36,7 @@ internal class Program
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Home/Error");
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            // The default HSTS value is 30 days. You may want to change th is for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
 
@@ -34,6 +44,8 @@ internal class Program
         app.UseStaticFiles();
 
         app.UseRouting();
+
+        app.UseSession();
 
         app.UseAuthorization();
 
