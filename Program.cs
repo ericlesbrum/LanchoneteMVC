@@ -16,7 +16,9 @@ internal class Program
         //DI
         builder.Services.AddTransient<ILancheRepository, LancheRepository>();
         builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
-        builder.Services.AddTransient<CarrinhoCompraRepository>();
+        builder.Services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
+        //trabalha em nivel de request
+        builder.Services.AddScoped<ICarrinhoCompraRepository, CarrinhoCompraRepository>();
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
