@@ -25,11 +25,11 @@ namespace LanchoneteMVC.Controllers
         {
             var itens = _carrinhoCompraRepository.GetCarrinhoCompraItems();
 
-            _carrinhoCompraRepository.CarrinhoCompraItems = itens;
+            _carrinhoCompraRepository.GetCarrinhoCompra().carrinhoCompraItems = itens;
 
             var carrinhoCompraVM = new CarrinhoCompraViewModel
             {
-                CarrinhoCompra = (CarrinhoCompra)_carrinhoCompraRepository,
+                CarrinhoCompra = _carrinhoCompraRepository.GetCarrinhoCompra(),
                 CarrinhoCompraTotal = _carrinhoCompraRepository.GetCarrinhoCompraTotal()
             };
 

@@ -12,21 +12,14 @@ namespace LanchoneteMVC.Repositories
     public class CarrinhoCompraRepository : ICarrinhoCompraRepository
     {
         private readonly AppDbContext _context;
-        private static CarrinhoCompra carrinhoCompra;
-
-        public List<CarrinhoCompraItem> carrinhoCompraItems { get; set; }
-        public IEnumerable<CarrinhoCompraItem> CarrinhoCompraItems
-        {
-            get => carrinhoCompraItems;
-            set => carrinhoCompraItems= (List<CarrinhoCompraItem>)value;
-        }
-
+        //Injeta o contexto no construtor
         public CarrinhoCompraRepository(AppDbContext context)
         {
             _context = context;
         }
+        public CarrinhoCompra CarrinhoCompra;
 
-        public static CarrinhoCompra GetCarrinho(IServiceProvider serviceProvider)
+        public static CarrinhoCompraRepository GetCarrinho(IServiceProvider serviceProvider)
         {
             //define uma sessão, caso contrario não é feito nada
             ISession session = serviceProvider.GetRequiredService<IHttpContextAccessor>()?.HttpContext.Session;
@@ -41,23 +34,26 @@ namespace LanchoneteMVC.Repositories
             session.SetString("CarrinhoId", carrinhoId);
 
             //retorna o carrinho com o contexto e o Id atribuído ou obtido
-            return carrinhoCompra = new CarrinhoCompra()
+            return new CarrinhoCompraRepository(context)
             {
-                Id = carrinhoId
+                CarrinhoCompra = new CarrinhoCompra
+                {
+                    Id = carrinhoId
+                }
             };
         }
         public void AdicionarAoCarrinho(Lanche lanche)
         {
             //verifica se o item existe
             var carrinhoCompraItem = _context.CarrinhoCompraItems.SingleOrDefault(
-                item => item.Lanche.Id == lanche.Id && item.CarrinhoCompraId == carrinhoCompra.Id
+                item => item.Lanche.Id == lanche.Id && item.CarrinhoCompraId == CarrinhoCompra.Id
             );
             //caso não exista, insere um novo produto
             if (carrinhoCompraItem == null)
             {
                 carrinhoCompraItem = new CarrinhoCompraItem
                 {
-                    CarrinhoCompraId = carrinhoCompra.Id,
+                    CarrinhoCompraId = CarrinhoCompra.Id,
                     Lanche = lanche,
                     Quantidade = 1
                 };
@@ -75,7 +71,7 @@ namespace LanchoneteMVC.Repositories
         {
             //verifica se o item existe
             var carrinhoCompraItem = _context.CarrinhoCompraItems.SingleOrDefault(
-                item => item.Lanche.Id == lanche.Id && item.CarrinhoCompraId == carrinhoCompra.Id
+                item => item.Lanche.Id == lanche.Id && item.CarrinhoCompraId == CarrinhoCompra.Id
             );
             //verifica se o item existe e se a quantidade for maior que 1, decrementa e retorna o valor da quantidadeLocal
             if (carrinhoCompraItem != null)
@@ -100,12 +96,12 @@ namespace LanchoneteMVC.Repositories
                 É utilizada a instancia do contexto e obtendo os carrinhos de compras comparado ao o id do carrinho da sessão,
                 é incluido todos os lanches do carrinho
             */
-            return (List<CarrinhoCompraItem>)(CarrinhoCompraItems ??
-            (CarrinhoCompraItems =
+            return CarrinhoCompra.carrinhoCompraItems ??
+            (CarrinhoCompra.carrinhoCompraItems =
                 _context.CarrinhoCompraItems
-                .Where(carrinho => carrinho.CarrinhoCompraId == carrinhoCompra.Id)
+                .Where(carrinho => carrinho.CarrinhoCompraId == CarrinhoCompra.Id)
                 .Include(carrinhoCompraItem => carrinhoCompraItem.Lanche)
-                .ToList()));
+                .ToList());
         }
         public void LimparCarrinho()
         {
@@ -113,7 +109,7 @@ namespace LanchoneteMVC.Repositories
                 Localiza o carrinho de compra com o id especifico, vai usar o metodo RemoveRange() para remover todos os itens do carrinho de compra
                 e vai persistir no banco de dados
             */
-            var carrinhoItems = _context.CarrinhoCompraItems.Where(carrinho => carrinho.CarrinhoCompraId == carrinhoCompra.Id);
+            var carrinhoItems = _context.CarrinhoCompraItems.Where(carrinho => carrinho.CarrinhoCompraId == CarrinhoCompra.Id);
             _context.CarrinhoCompraItems.RemoveRange(carrinhoItems);
             _context.SaveChanges();
         }
@@ -123,9 +119,14 @@ namespace LanchoneteMVC.Repositories
                 Retorna o total da soma de todos os itens de um carrinho de compras
             */
             var total = _context.CarrinhoCompraItems
-            .Where(carrinho => carrinho.CarrinhoCompraId == carrinhoCompra.Id)
+            .Where(carrinho => carrinho.CarrinhoCompraId == CarrinhoCompra.Id)
             .Select(carrinho => carrinho.Lanche.Preco * carrinho.Quantidade).Sum();
             return total;
+        }
+
+        public CarrinhoCompra GetCarrinhoCompra()
+        {
+            return CarrinhoCompra;
         }
     }
 }

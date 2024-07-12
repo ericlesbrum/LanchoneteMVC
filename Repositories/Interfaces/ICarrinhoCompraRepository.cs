@@ -8,7 +8,7 @@ namespace LanchoneteMVC.Repositories.Interfaces
 {
     public interface ICarrinhoCompraRepository
     {
-        IEnumerable<CarrinhoCompraItem> CarrinhoCompraItems { get; set; }
+        CarrinhoCompra GetCarrinhoCompra();
         List<CarrinhoCompraItem> GetCarrinhoCompraItems();
         decimal GetCarrinhoCompraTotal();
         void AdicionarAoCarrinho(Lanche lanche);
