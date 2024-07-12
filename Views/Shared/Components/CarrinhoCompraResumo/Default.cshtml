@@ -1,0 +1,18 @@
+@model CarrinhoCompraViewModel
+"@* 
+Verifica se a quantidade de lanches dentro do carrinho de compras é maior que zero.
+Define imagem (Está no template no momento)
+Define a quantidade a ser exibida
+o usuário pode clicar tanto no icone ou quantidade
+*@"
+@if (Model.CarrinhoCompra.carrinhoCompraItems.Count > 0)
+{
+    <a asp-controller="CarrinhoCompra" asp-action="Index">
+        <span>
+            CarrinhoCompra
+        </span>
+        <span class="text-light">
+            @Model.CarrinhoCompra.carrinhoCompraItems.Count
+        </span>
+    </a>
+}
