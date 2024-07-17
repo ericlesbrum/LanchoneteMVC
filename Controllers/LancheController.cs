@@ -37,7 +37,12 @@ namespace LanchoneteMVC.Controllers
             return View(LancheListViewModel.GetLancheListViewModel(lanches, CategoriaAtual));
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Details(int Id)
+        {
+            var lanche=_lancheRepository.Lanches.FirstOrDefault(lanche=>lanche.Id==Id);
+            return View(lanche);
+        }
+
         public IActionResult Error()
         {
             return View("Error!");

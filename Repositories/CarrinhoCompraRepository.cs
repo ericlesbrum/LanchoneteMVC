@@ -74,7 +74,7 @@ namespace LanchoneteMVC.Repositories
                 item => item.Lanche.Id == lanche.Id && item.CarrinhoCompraId == CarrinhoCompra.Id
             );
             //verifica se o item existe e se a quantidade for maior que 1, decrementa e retorna o valor da quantidadeLocal
-            if (carrinhoCompraItem != null)
+            if (carrinhoCompraItem == null)
                 return;
 
             if (carrinhoCompraItem.Quantidade > 1)
