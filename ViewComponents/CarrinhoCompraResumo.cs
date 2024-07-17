@@ -19,12 +19,7 @@ namespace LanchoneteMVC.ViewComponents
         }
         public IViewComponentResult Invoke()
         {
-            // var itens = _carrinhoCompraRepository.GetCarrinhoCompraItems();
-
-            var itens = new List<CarrinhoCompraItem>(){
-                new CarrinhoCompraItem(),
-                new CarrinhoCompraItem()
-            };
+            var itens = _carrinhoCompraRepository.GetCarrinhoCompraItems();
 
             _carrinhoCompraRepository.GetCarrinhoCompra().carrinhoCompraItems = itens;
 

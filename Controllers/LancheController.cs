@@ -24,27 +24,25 @@ namespace LanchoneteMVC.Controllers
         public IActionResult List(string categoria)
         {
             IEnumerable<Lanche> lanches;
+            string CategoriaAtual = "";
 
             if (string.IsNullOrEmpty(categoria))
             {
                 lanches = _lancheRepository.Lanches.OrderBy(lanche => lanche.Id);
-                return View(LancheListViewModel.GetLancheListViewModel(lanches, "Todos os Lanches"));
             }
-            switch (categoria.ToLower())
+            else
             {
-                case "normal":
-                    lanches = _lancheRepository.Lanches.Where(lanche => lanche.Categoria.CategoriaNome.Equals("Normal")).OrderBy(lanche => lanche.Nome);
-                    return View(LancheListViewModel.GetLancheListViewModel(lanches, "Normal"));
-                case "natural":
-                    lanches = _lancheRepository.Lanches.Where(lanche => lanche.Categoria.CategoriaNome.Equals("Natural")).OrderBy(lanche => lanche.Nome);
-                    return View(LancheListViewModel.GetLancheListViewModel(lanches, "Natural"));
-                default:
-                    lanches = _lancheRepository.Lanches.OrderBy(lanche => lanche.Id);
-                    return View(LancheListViewModel.GetLancheListViewModel(lanches, "Todos os Lanches"));
+                lanches = _lancheRepository.Lanches.Where(lanche => lanche.Categoria.CategoriaNome.Equals(categoria));
             }
+            return View(LancheListViewModel.GetLancheListViewModel(lanches, CategoriaAtual));
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Details(int Id)
+        {
+            var lanche=_lancheRepository.Lanches.FirstOrDefault(lanche=>lanche.Id==Id);
+            return View(lanche);
+        }
+
         public IActionResult Error()
         {
             return View("Error!");

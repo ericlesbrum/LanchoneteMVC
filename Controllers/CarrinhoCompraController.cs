@@ -54,7 +54,6 @@ namespace LanchoneteMVC.Controllers
             {
                 _carrinhoCompraRepository.RemoverDoCarrinho(lancheSelecionado);
             }
-            
             return RedirectToAction("Index");
         }
     }
