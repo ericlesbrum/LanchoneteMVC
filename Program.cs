@@ -16,9 +16,9 @@ internal class Program
         //DI
         builder.Services.AddTransient<ILancheRepository, LancheRepository>();
         builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
-        builder.Services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
+        builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         //trabalha em nivel de request
-        builder.Services.AddScoped<ICarrinhoCompraRepository, CarrinhoCompraRepository>(sp=>CarrinhoCompraRepository.GetCarrinho(sp));
+        builder.Services.AddScoped<ICarrinhoCompraRepository, CarrinhoCompraRepository>(sp => CarrinhoCompraRepository.GetCarrinho(sp));
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
@@ -50,6 +50,11 @@ internal class Program
         app.UseSession();
 
         app.UseAuthorization();
+
+        app.MapControllerRoute(
+            name: "categoriaFiltro",
+            pattern: "Lanche/{action}/{categoria?}",
+            defaults: new { Controller = "Lanche", Action = "List" });
 
         app.MapControllerRoute(
             name: "default",
