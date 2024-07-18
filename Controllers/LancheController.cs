@@ -39,8 +39,32 @@ namespace LanchoneteMVC.Controllers
 
         public IActionResult Details(int Id)
         {
-            var lanche=_lancheRepository.Lanches.FirstOrDefault(lanche=>lanche.Id==Id);
+            var lanche = _lancheRepository.Lanches.FirstOrDefault(lanche => lanche.Id == Id);
             return View(lanche);
+        }
+        public IActionResult Search(string searchString)
+        {
+            IEnumerable<Lanche> lanches;
+            string CategoriaAtual = string.Empty;
+            if (string.IsNullOrEmpty(searchString))
+            {
+                lanches = _lancheRepository.Lanches.OrderBy(lanche => lanche.Id);
+                CategoriaAtual = "Todos os Lanches";
+            }
+            else
+            {
+                lanches = _lancheRepository.Lanches.Where(lanche => lanche.Nome.ToLower().Contains(searchString.ToLower()));
+                if (lanches.Any())
+                    CategoriaAtual = "Lanches";
+                else
+                    CategoriaAtual = "Nenhum lanche foi encontrado";
+            }
+
+            return View("~/Views/Lanche/List.cshtml", new LancheListViewModel
+            {
+                Lanches = lanches,
+                CategoriaAtual = CategoriaAtual
+            });
         }
 
         public IActionResult Error()
