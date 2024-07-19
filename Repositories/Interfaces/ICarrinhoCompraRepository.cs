@@ -13,5 +13,6 @@ namespace LanchoneteMVC.Repositories.Interfaces
         decimal GetCarrinhoCompraTotal();
         void AdicionarAoCarrinho(Lanche lanche);
         void RemoverDoCarrinho(Lanche lanche);
+        void LimparCarrinho();
     }
 }
