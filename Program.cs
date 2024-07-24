@@ -1,6 +1,7 @@
 using LanchoneteMVC.Context;
 using LanchoneteMVC.Repositories;
 using LanchoneteMVC.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 internal class Program
@@ -13,11 +14,16 @@ internal class Program
         builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection")));
 
+        //Identity
+        builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+        .AddEntityFrameworkStores<AppDbContext>()
+        .AddDefaultTokenProviders();
+
         //DI
         builder.Services.AddTransient<ILancheRepository, LancheRepository>();
         builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
         builder.Services.AddTransient<IPedidoRepository, PedidoRepository>();
-        
+
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         //trabalha em nivel de request
         builder.Services.AddScoped<ICarrinhoCompraRepository, CarrinhoCompraRepository>(sp => CarrinhoCompraRepository.GetCarrinho(sp));
@@ -51,6 +57,7 @@ internal class Program
 
         app.UseSession();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllerRoute(
